@@ -32,7 +32,9 @@ const SettingsScreen: React.FC = () => {
 
       <TouchableOpacity
         style={styles.option}
-        onPress={() => Linking.openURL('https://github.com/your-repo')}>
+        onPress={() =>
+          Linking.openURL('https://github.com/mayilvhnm17/Todo-app')
+        }>
         <Text style={[styles.optionText, theme === 'dark' && styles.darkText]}>
           📦 View Source Code
         </Text>
