@@ -5,7 +5,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../store/store';
 import {toggleTodo, removeTodo} from '../store/reducers/todoReducer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useTheme} from '../components/context'; // Import theme context
+import {useTheme} from '../components/context';
+import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CalendarScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -13,9 +14,30 @@ const CalendarScreen: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split('T')[0],
   );
+  const [currentMonth, setCurrentMonth] = useState<string>(
+    new Date().toISOString().split('T')[0],
+  );
 
   // Use theme context
   const {theme} = useTheme();
+
+  const generateDatesInMonth = (month: string): string[] => {
+    // You can use a library like date-fns or moment.js to generate all dates of the current month
+    const startDate = new Date(month);
+    const endDate = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth() + 1,
+      0,
+    ); // Get the last date of the month
+
+    const dates: string[] = [];
+    for (let day = 1; day <= endDate.getDate(); day++) {
+      const date = new Date(startDate.getFullYear(), startDate.getMonth(), day);
+      dates.push(date.toISOString().split('T')[0]); // Store date as "YYYY-MM-DD"
+    }
+
+    return dates;
+  };
 
   // Dynamically create marked dates
   const markedDates = useMemo(() => {
@@ -26,9 +48,33 @@ const CalendarScreen: React.FC = () => {
           dotColor: theme === 'dark' ? 'white' : 'white',
         };
       }
+       if (date === selectedDate) {
+         acc[date] = {
+           ...acc[date],
+           selected: true,
+           selectedColor: '#454545', // Color for the selected date
+           selectedTextColor: '#fff', // Text color of the selected date
+         };
+       }
       return acc;
     }, {} as Record<string, any>);
-  }, [todos, theme]);
+  }, [todos, theme,selectedDate]);
+
+  const otherMarkedDates = useMemo(() => {
+  const allDaysInMonth = generateDatesInMonth(currentMonth); // Generate dates in the current month
+  const unmarkedDates = allDaysInMonth.filter(date => !todos[date]);
+    console.log(unmarkedDates,currentMonth);
+    return unmarkedDates.reduce((acc, date) => {
+      acc[date] = {
+        selected: date === selectedDate,
+        selectedColor: '#454545',
+        selectedTextColor: '#fff',
+      };
+      return acc;
+    }, {} as Record<string, any>);
+  }, [currentMonth, todos, selectedDate]);
+
+const finalMarkedDates = {...markedDates, ...otherMarkedDates};
 
 
 
@@ -39,12 +85,13 @@ const CalendarScreen: React.FC = () => {
       <View style={currentStyles.calendarWrapper}>
         <Calendar
           onDayPress={day => setSelectedDate(day.dateString)}
-          markedDates={markedDates}
+          onMonthChange={month => setCurrentMonth(month.dateString)}
+          markedDates={finalMarkedDates}
           theme={{
-            todayTextColor: theme === 'dark' ? 'yellow' : 'blue',
-            arrowColor: theme === 'dark' ? 'yellow' : 'blue',
-            monthTextColor: theme === 'dark' ? 'yellow' : 'blue',
-            calendarBackground: theme === 'dark' ? '#121212' : '#121212',
+            todayTextColor: theme === 'dark' ? '#FFD700' : '#FFD700',
+            arrowColor: theme === 'dark' ? '#FFD700' : '#FFD700',
+            monthTextColor: theme === 'dark' ? '#FFD700' : '#FFD700',
+            calendarBackground: theme === 'dark' ? '#121212' : '#676767',
             textSectionTitleColor: theme === 'dark' ? '#fff' : '#000',
             dayTextColor: theme === 'dark' ? '#fff' : '#000',
             arrowStyle: {height: 20, width: 20},
@@ -92,7 +139,7 @@ const CalendarScreen: React.FC = () => {
               onPress={() => {
                 dispatch(removeTodo({date: selectedDate, id: item.id}));
               }}>
-              <Text style={currentStyles.deleteText}>❌</Text>
+              <MIcon name="delete" size={24} color="#007AFF" />
             </TouchableOpacity>
           </View>
         )}
@@ -104,7 +151,7 @@ const CalendarScreen: React.FC = () => {
   );
 };
   const lightStyle = StyleSheet.create({
-    container: {flex: 1, padding: 20, backgroundColor: '#fff'},
+    container: {flex: 1, padding: 20, backgroundColor: '#eee'},
     title: {
       fontSize: 20,
       fontWeight: 'bold',
@@ -131,7 +178,7 @@ const CalendarScreen: React.FC = () => {
   });
 
   const darkStyle = StyleSheet.create({
-    container: {flex: 1, padding: 20, backgroundColor: '#121212'},
+    container: {flex: 1, padding: 20, backgroundColor: '#232323'},
     title: {
       fontSize: 20,
       fontWeight: 'bold',

@@ -4,17 +4,23 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider} from 'react-redux';
-import {store} from './todo_app/store/store';
+import {persistor, store} from './todo_app/store/store';
 import CalendarScreen from './todo_app/screens/CalendarScreen';
 import SettingsScreen from './todo_app/screens/SettingsScreen';
 import TodoScreen from './todo_app/screens/TodoScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ThemeProvider, useTheme} from './todo_app/components/context'; // Import useTheme and ThemeProvider
+import { PersistGate } from 'redux-persist/integration/react';
 
 const Tab = createBottomTabNavigator();
 
 const HomeIcon = ({color}: {color: string}) => (
-  <Icon name="home" size={24} color={color} />
+  <Icon
+    name="home"
+    size={24}
+    color={color}
+    style={{fontFamily: 'Ionicons'}}
+  />
 );
 
 const CalendarIcon = ({color}: {color: string}) => (
@@ -40,12 +46,13 @@ SettingsIcon.defaultProps = {
 const App = () => {
   return (
     <Provider store={store}>
-      {/* Wrap the entire app with ThemeProvider to allow useTheme to work */}
+      <PersistGate loading={null} persistor={persistor}>
       <ThemeProvider>
         <NavigationContainer>
           <Tabs />
         </NavigationContainer>
       </ThemeProvider>
+      </PersistGate>
     </Provider>
   );
 };

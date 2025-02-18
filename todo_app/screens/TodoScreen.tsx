@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {addTodo, toggleTodo, removeTodo} from '../store/reducers/todoReducer';
 import {RootState, AppDispatch} from '../store/store';
@@ -41,7 +41,7 @@ const TodoScreen: React.FC = () => {
         style={themeStyles.datePicker}
         onPress={() => setOpen(true)}>
         <Text style={themeStyles.dateText}>{selectedDate}</Text>
-        <MaterialCommunityIcons name="calendar" size={24} color="#007AFF" />
+        <MIcon name="calendar" size={24} color="#007AFF" />
       </TouchableOpacity>
 
       <DatePicker
@@ -61,8 +61,13 @@ const TodoScreen: React.FC = () => {
         <TextInput
           style={themeStyles.input}
           placeholder="Add a task..."
+          placeholderTextColor={theme === 'dark' ? '#aaa' : '#999'}
           value={task}
+          multiline={true}
+          scrollEnabled={true}
+          textAlignVertical='top'
           onChangeText={setTask}
+          numberOfLines={3}
         />
         <TouchableOpacity
           style={themeStyles.addButton}
@@ -72,7 +77,7 @@ const TodoScreen: React.FC = () => {
               setTask('');
             }
           }}>
-          <Text style={themeStyles.addButtonText}>+</Text>
+          <MIcon name="plus" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
 
@@ -87,7 +92,7 @@ const TodoScreen: React.FC = () => {
               onPress={() =>
                 dispatch(toggleTodo({date: selectedDate, id: item.id}))
               }>
-              <MaterialCommunityIcons
+              <MIcon
                 name={
                   item.completed ? 'checkbox-marked' : 'checkbox-blank-outline'
                 }
@@ -110,7 +115,7 @@ const TodoScreen: React.FC = () => {
               onPress={() =>
                 dispatch(removeTodo({date: selectedDate, id: item.id}))
               }>
-              <Text style={themeStyles.deleteText}>❌</Text>
+              <MIcon name="delete" size={24} color="#007AFF" />
             </TouchableOpacity>
           </View>
         )}
@@ -120,19 +125,19 @@ const TodoScreen: React.FC = () => {
 };
 
 const lightStyles = StyleSheet.create({
-  container: {flex: 1, padding: 20, backgroundColor: '#fff'},
-  title: {fontSize: 24, fontWeight: 'bold', marginBottom: 10},
+  container: {flex: 1, padding: 20, backgroundColor: '#eee'},
+  title: {fontSize: 24, fontWeight: 'bold', marginBottom: 10,textAlign: 'center'},
   datePicker: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ddd',
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
   },
   dateText: {fontSize: 16, flex: 1},
-  inputContainer: {flexDirection: 'row', alignItems: 'center'},
-  input: {flex: 1, borderBottomWidth: 1, padding: 8},
+  inputContainer: {flexDirection: 'row', alignItems: 'center', marginVertical: 10},
+  input: {flex: 1, borderWidth: 0.5, padding: 8, color: '#121212',height: 80,borderRadius: 5},
   addButton: {
     backgroundColor: '#007AFF',
     padding: 10,
@@ -153,19 +158,37 @@ const lightStyles = StyleSheet.create({
 });
 
 const darkStyles = StyleSheet.create({
-  container: {flex: 1, padding: 20, backgroundColor: '#121212'},
-  title: {fontSize: 24, fontWeight: 'bold', marginBottom: 10, color: '#fff'},
+  container: {flex: 1, padding: 20, backgroundColor: '#232323'},
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#fff',
+    textAlign: 'center',
+  },
   datePicker: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#333',
+    backgroundColor: '#444',
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
   },
   dateText: {fontSize: 16, flex: 1, color: '#fff'},
-  inputContainer: {flexDirection: 'row', alignItems: 'center'},
-  input: {flex: 1, borderBottomWidth: 1, padding: 8, borderColor: '#fff'},
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 0.5,
+    padding: 8,
+    borderColor: '#fff',
+    color: '#fff',
+    height: 80,
+    borderRadius: 5,
+  },
   addButton: {
     backgroundColor: '#007AFF',
     padding: 10,

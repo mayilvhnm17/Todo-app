@@ -60,15 +60,15 @@ const SettingsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 20, backgroundColor: '#fff'},
-  title: {fontSize: 24, fontWeight: 'bold', marginBottom: 10},
+  container: {flex: 1, padding: 20, backgroundColor: '#eee'},
+  title: {fontSize: 24, fontWeight: 'bold', marginBottom: 10,textAlign: 'center'},
   sectionTitle: {fontSize: 18, fontWeight: 'bold', marginTop: 20},
   option: {paddingVertical: 15, borderBottomWidth: 1, borderColor: '#ddd'},
   optionText: {fontSize: 16, color: '#333'},
   linkText: {fontSize: 16, color: '#007AFF', marginTop: 10},
   version: {fontSize: 14, color: '#666', marginTop: 20},
-  darkContainer: {backgroundColor: '#121212'},
-  text: {fontSize: 18, color: '#000'},
+  darkContainer: {backgroundColor: '#232323'},
+  text: {fontSize: 18, color: '#000',paddingTop: 10},
   darkText: {color: '#fff'},
   row: {
     width: '100%',
